@@ -1,0 +1,8 @@
+{
+  "name": "Password Vault",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "ed67e97b"
+}
