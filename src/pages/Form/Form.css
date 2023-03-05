@@ -1,0 +1,10 @@
+.generate-password {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40px;
+  border: 1px solid #1c1c1c;
+  width: 60%;
+  margin: 10px auto;
+  position: relative;
+}

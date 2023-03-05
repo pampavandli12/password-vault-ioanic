@@ -1,0 +1,7 @@
+.container {
+}
+.floating-button {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+}
