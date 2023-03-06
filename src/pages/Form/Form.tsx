@@ -21,6 +21,7 @@ import './Form.css';
 import { generateString } from '../../utils/utils';
 import { useContext } from 'react';
 import { storageContext } from '../../App';
+import { Password } from '../../data';
 
 export const Form = () => {
   const [showPassword, setshowPassword] = useState<boolean>(false);
@@ -58,13 +59,14 @@ export const Form = () => {
   };
   const onsubmit = async () => {
     if (title && email && password) {
-      const data = {
+      const data: Password = {
+        id: generateString(10),
         title,
         website,
-        username,
+        userName: username,
         email,
         password,
-        note,
+        notes: note,
       };
       try {
         if (store) {

@@ -1,12 +1,13 @@
 export interface Password {
   id: string;
   title: string;
+  website: string;
   userName: string;
   email: string;
   password: string;
   notes: string;
 }
-export const TEST_DATA: Password[] = [
+export const TEST_DATA = [
   {
     id: '1',
     title: 'Facebook',

@@ -10,27 +10,32 @@ import {
   IonToolbar,
   useIonActionSheet,
 } from '@ionic/react';
-import {
-  arrowBackOutline,
-  ellipsisVerticalOutline,
-  menu,
-} from 'ionicons/icons';
+import { arrowBackOutline, ellipsisVerticalOutline } from 'ionicons/icons';
+import { useContext } from 'react';
+import { storageContext } from '../../App';
+import { Password } from '../../data';
+
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { Password, TEST_DATA } from '../../data';
 import './Detail.css';
 import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 
 export const Detail = () => {
   const [password, setPassword] = useState<Password | null>(null);
+  const store = useContext(storageContext);
   const { id } = useParams<{ id: string }>();
   const [present] = useIonActionSheet();
   useEffect(() => {
-    const filteredPassword = TEST_DATA.filter(
-      (item: Password) => item.id === id
-    );
-    setPassword(filteredPassword[0]);
-  }, [id]);
+    (async () => {
+      if (store) {
+        let dataList = await store.get('passwordList');
+        const filteredPassword = dataList.filter(
+          (item: Password) => item.id === id
+        );
+        setPassword(filteredPassword[0]);
+      }
+    })();
+  }, [id, store]);
   const handleAction = (detail: OverlayEventDetail) => {
     console.log(detail);
   };
