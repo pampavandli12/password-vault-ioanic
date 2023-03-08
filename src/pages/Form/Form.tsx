@@ -18,10 +18,11 @@ import {
   syncOutline,
 } from 'ionicons/icons';
 import './Form.css';
-import { generateString } from '../../utils/utils';
+import { generateString, generateUniqueID } from '../../utils/utils';
 import { useContext } from 'react';
 import { storageContext } from '../../App';
 import { Password } from '../../data';
+import { useHistory } from 'react-router-dom';
 
 export const Form = () => {
   const [showPassword, setshowPassword] = useState<boolean>(false);
@@ -32,6 +33,7 @@ export const Form = () => {
   const [note, setNote] = useState('');
   const [website, setWebsite] = useState('');
   const store = useContext(storageContext);
+  const history = useHistory();
 
   const handleTitle = (event: Event) => {
     const value = (event.target as HTMLInputElement).value;
@@ -60,7 +62,7 @@ export const Form = () => {
   const onsubmit = async () => {
     if (title && email && password) {
       const data: Password = {
-        id: generateString(10),
+        id: generateUniqueID(),
         title,
         website,
         userName: username,
@@ -73,6 +75,7 @@ export const Form = () => {
           let dataList = await store.get('passwordList');
           dataList = dataList ? [...dataList, data] : [data];
           await store.set('passwordList', dataList);
+          history.push(`/home/`);
         } else {
           console.log('store is null');
         }

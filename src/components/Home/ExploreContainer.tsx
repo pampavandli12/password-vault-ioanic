@@ -24,18 +24,27 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
 
   return (
     <div className='container'>
-      <IonList lines='full'>
-        {passwordList.map((item, index) => (
-          <IonItem
-            key={index}
-            className='ion-activatable ripple-parent rectangle'
-            routerLink={`/detail/${item.id}`}
-          >
-            <IonLabel>{item.title}</IonLabel>
-            <IonRippleEffect></IonRippleEffect>
-          </IonItem>
-        ))}
-      </IonList>
+      {passwordList ? (
+        <IonList lines='full'>
+          {passwordList.map((item, index) => (
+            <IonItem
+              key={index}
+              className='ion-activatable ripple-parent rectangle'
+              routerLink={`/detail/${item.id}`}
+            >
+              <IonLabel>{item.title}</IonLabel>
+              <IonRippleEffect></IonRippleEffect>
+            </IonItem>
+          ))}
+        </IonList>
+      ) : (
+        <IonItem className='no-data-item'>
+          <div className='no-data-container'>
+            <div>No data found</div>
+            <div>Please try adding passwords</div>
+          </div>
+        </IonItem>
+      )}
       <IonFab className='floating-button'>
         <IonFabButton routerLink='/create'>
           <IonIcon icon={add}></IonIcon>
