@@ -32,51 +32,29 @@ const Menu: React.FC = () => {
       console.log(error);
     }
   };
-  const readFile = async () => {
-    const contents = await Filesystem.readFile({
-      path: 'secrets/text.txt',
-      directory: Directory.Documents,
-      encoding: Encoding.UTF8,
-    });
-
-    console.log('secrets:', contents);
+  // @ts-ignore: next-line
+  const readFile = async ({ data }) => {
+    console.log('This is file data', data);
+    if (store) {
+      try {
+        let PasswordList = await store?.get('passwordList');
+        PasswordList = PasswordList ? [...PasswordList, ...data] : [...data];
+        await store.set('passwordList', PasswordList);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log('Something wrong, please try again later');
+    }
   };
   const handleFileRead = async (event: any) => {
     const file = event.target.files[0];
     console.log(file);
-    const config = {
-      delimiter: '', // auto-detect
-      newline: '', // auto-detect
-      quoteChar: '"',
-      escapeChar: '"',
-      header: false,
-      transformHeader: undefined,
-      dynamicTyping: false,
-      preview: 0,
-      encoding: '',
-      worker: false,
-      comments: false,
-      step: undefined,
-      complete: undefined,
-      error: undefined,
-      download: false,
-      downloadRequestHeaders: undefined,
-      downloadRequestBody: undefined,
-      skipEmptyLines: false,
-      chunk: undefined,
-      chunkSize: undefined,
-      fastMode: undefined,
-      beforeFirstChunk: undefined,
-      withCredentials: undefined,
-      transform: undefined,
-      delimitersToGuess: [',', '\t', '|', ';', Papa.RECORD_SEP, Papa.UNIT_SEP],
-    };
-    try {
-      const fileContent = await Papa.parse(file);
-      console.log(fileContent);
-    } catch (error) {
-      console.log(error);
-    }
+    const fileContent = Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: readFile,
+    });
   };
   const exportHandler = async (): Promise<void> => {
     if (store) {
@@ -93,21 +71,9 @@ const Menu: React.FC = () => {
       });
       const csvFile = Papa.unparse({ fields: fields, data: data }, config);
       writeFile(csvFile);
-      //   console.log(csvFile);
-      //   let blob = new Blob([csvFile]);
-      //   let a = window.document.createElement('a');
-      //   a.href = window.URL.createObjectURL(blob);
-      //   a.download = 'testCSV.csv';
-      //   document.body.appendChild(a);
-      //   a.click();
-      //   document.body.removeChild(a);
-      // }
     }
   };
   const importHandler = async (): Promise<void> => {
-    // let dataList = await store.get('passwordList');
-    // dataList = dataList ? [...dataList, data] : [data];
-    // await store.set('passwordList', dataList);
     // @ts-ignore: next-line
     fileReaderInput.current.click();
   };
@@ -125,6 +91,7 @@ const Menu: React.FC = () => {
               type='file'
               hidden
               ref={fileReaderInput}
+              accept='.csv'
               onChange={(event) => handleFileRead(event)}
             />
             <IonLabel>Import from csv</IonLabel>

@@ -16,7 +16,7 @@ import { storageContext } from '../../App';
 import { Password } from '../../data';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import './Detail.css';
 import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 
@@ -25,6 +25,7 @@ export const Detail = () => {
   const store = useContext(storageContext);
   const { id } = useParams<{ id: string }>();
   const [present] = useIonActionSheet();
+  const history = useHistory();
   useEffect(() => {
     (async () => {
       if (store) {
@@ -36,8 +37,30 @@ export const Detail = () => {
       }
     })();
   }, [id, store]);
+  const deleteHandler = async (id: string | undefined) => {
+    if (store) {
+      const passwordList = await store.get('passwordList');
+      const newList =
+        passwordList && passwordList.filter((item: Password) => item.id !== id);
+      store.set('passwordList', newList);
+      history.push('/home');
+    } else {
+      console.log('Something wrong, please try again');
+    }
+  };
+  const editHandler = (id: string | undefined) => {
+    console.log('edit ahs to be implemenetd later');
+  };
   const handleAction = (detail: OverlayEventDetail) => {
     console.log(detail);
+    switch (detail.data.action) {
+      case 'delete':
+        return deleteHandler(password?.id);
+      case 'edit':
+        return editHandler(password?.id);
+      default:
+        break;
+    }
   };
   const openOptionSheet = () => {
     present({
