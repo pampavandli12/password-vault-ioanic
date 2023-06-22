@@ -6,7 +6,6 @@ import {
   IonLabel,
   IonList,
   IonPage,
-  IonSpinner,
   IonToolbar,
   useIonActionSheet,
 } from '@ionic/react';
@@ -19,6 +18,7 @@ import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import './Detail.css';
 import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
+import { LoadingComponent } from '../../components/Loading/LoadingComponent';
 
 export const Detail = () => {
   const [password, setPassword] = useState<Password | null>(null);
@@ -26,6 +26,7 @@ export const Detail = () => {
   const { id } = useParams<{ id: string }>();
   const [present] = useIonActionSheet();
   const history = useHistory();
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
       if (store) {
@@ -34,15 +35,18 @@ export const Detail = () => {
           (item: Password) => item.id === id
         );
         setPassword(filteredPassword[0]);
+        setLoading(false);
       }
     })();
   }, [id, store]);
   const deleteHandler = async (id: string | undefined) => {
     if (store) {
+      setLoading(true);
       const passwordList = await store.get('passwordList');
       const newList =
         passwordList && passwordList.filter((item: Password) => item.id !== id);
       store.set('passwordList', newList);
+      setLoading(false);
       history.push('/home');
     } else {
       console.log('Something wrong, please try again');
@@ -131,9 +135,8 @@ export const Detail = () => {
               </IonItem>
             </IonList>
           </>
-        ) : (
-          <IonSpinner></IonSpinner>
-        )}
+        ) : null}
+        {loading ? <LoadingComponent /> : null}
       </IonContent>
     </IonPage>
   );

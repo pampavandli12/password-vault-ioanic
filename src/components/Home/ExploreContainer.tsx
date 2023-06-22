@@ -2,9 +2,10 @@ import { IonItem, IonLabel, IonList, IonRippleEffect } from '@ionic/react';
 import './ExploreContainer.css';
 import { IonFab, IonFabButton, IonIcon } from '@ionic/react';
 import { add } from 'ionicons/icons';
-import { Password, TEST_DATA } from '../../data';
+import { Password } from '../../data';
 import { useContext, useEffect, useState } from 'react';
 import { storageContext } from '../../App';
+import { EmptyComponent } from '../Empty/EmptyComponent';
 
 interface ContainerProps {
   name: string;
@@ -24,7 +25,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
 
   return (
     <div className='container'>
-      {passwordList ? (
+      {passwordList && passwordList.length > 0 ? (
         <IonList lines='full'>
           {passwordList.map((item, index) => (
             <IonItem
@@ -38,12 +39,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
           ))}
         </IonList>
       ) : (
-        <IonItem className='no-data-item'>
-          <div className='no-data-container'>
-            <div>No data found</div>
-            <div>Please try adding passwords</div>
-          </div>
-        </IonItem>
+        <EmptyComponent />
       )}
       <IonFab className='floating-button'>
         <IonFabButton routerLink='/create'>

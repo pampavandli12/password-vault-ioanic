@@ -23,6 +23,7 @@ import { useContext } from 'react';
 import { storageContext } from '../../App';
 import { Password } from '../../data';
 import { useHistory } from 'react-router-dom';
+import { LoadingComponent } from '../../components/Loading/LoadingComponent';
 
 export const Form = () => {
   const [showPassword, setshowPassword] = useState<boolean>(false);
@@ -32,6 +33,7 @@ export const Form = () => {
   const [password, setPassword] = useState('');
   const [note, setNote] = useState('');
   const [website, setWebsite] = useState('');
+  const [loading, setLoading] = useState(false);
   const store = useContext(storageContext);
   const history = useHistory();
 
@@ -70,6 +72,7 @@ export const Form = () => {
         password,
         notes: note,
       };
+      setLoading(true);
       try {
         if (store) {
           let dataList = await store.get('passwordList');
@@ -81,6 +84,8 @@ export const Form = () => {
         }
       } catch (error) {
         console.log('Something wrong, not able to save', error);
+      } finally {
+        setLoading(false);
       }
     } else {
       console.log('Enter the values properly');
@@ -103,7 +108,7 @@ export const Form = () => {
           </IonItem>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen id='form-conatainer'>
         <IonItem>
           <IonLabel position='floating'>Title</IonLabel>
           <IonInput
@@ -168,6 +173,7 @@ export const Form = () => {
             placeholder='Enter notes'
           ></IonInput>
         </IonItem>
+        {loading ? <LoadingComponent /> : null}
       </IonContent>
     </IonPage>
   );

@@ -1,3 +1,6 @@
+#form-conatainer {
+  position: relative;
+}
 .generate-password {
   display: flex;
   justify-content: center;

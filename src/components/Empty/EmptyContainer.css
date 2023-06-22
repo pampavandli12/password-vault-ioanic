@@ -1,0 +1,16 @@
+#empty-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 20%;
+}
+
+#empty-container .img {
+  width: 75px;
+}
+#empty-container .info {
+  font-weight: 600;
+  text-align: center;
+  font-size: 12px;
+}
